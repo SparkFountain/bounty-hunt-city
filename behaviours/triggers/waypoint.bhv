@@ -1,0 +1,10 @@
+string routeName
+int id
+int successor
+
+//draw line between this waypoint and its successor
+foreach waypoint
+	if ((waypoint.routeName == this.routeName) and (waypoint.id = this.successor))
+		DrawLine3D(this, waypoint)
+	endif
+endforeach

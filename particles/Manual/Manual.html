@@ -1,0 +1,272 @@
+<p align="center"><u><b><font face="Arial" size="5">Devil Particle System - 
+Manual</font></b></u></p>
+<p><font face="Arial">This is a manual which shows, how to handle the Devil 
+Particle System. It explains the engine step by step. From the first effect to 
+complex game effects.<br>
+<br>
+</font><font size="4" face="Arial"><b>The vocabulary<br>
+</b></font><font face="Arial"><br>
+I just want to explain you a few &quot;vocabulaires&quot;, to understand the manual.</font></p>
+<table border="2" style="border-collapse: collapse" id="table1" bgcolor="#FFFF00" width="1111">
+	<tr>
+		<td width="69" align="left" valign="top"><font face="Arial">Emitter</font></td>
+		<td align="left" valign="top"><font face="Arial">An Emitter is an entity, 
+		which produces particles.</font></td>
+	</tr>
+	<tr>
+		<td width="69" valign="top" align="left"><font face="Arial">Template</font></td>
+		<td align="left" valign="top"><font face="Arial">A template is a list of 
+		properties for the emitter. You have to set up a template with 
+		properties like movement, rotation, color, textures and so on... Then 
+		you can provide an emitter with the template.</font></td>
+	</tr>
+	<tr>
+		<td width="69" align="left" valign="top"><font face="Arial">Particle</font></td>
+		<td align="left" valign="top"><font face="Arial">A particle is a sprite 
+		which is textured with a texture like a cloud or a spark. In this system 
+		aren't any sprites used. Indeed not! This is such slowly... Here are all 
+		particles of an emitter in one mesh(in one surface). This is the reason 
+		why this is called &quot;single surface particle system&quot;.</font></td>
+	</tr>
+</table>
+<p><font face="Arial"><font size="4"><b>Engine setup</b></font><br>
+<br>
+Well, like in most of the blitz engines, you have to initialise the system in 
+the beginning, and you have to delete it after using. Well, this is no exception!<br>
+Here is a simple program, which shows, how to create a very simple particle fx:<br>
+&nbsp;</font></p>
+<table border="1" style="border-collapse: collapse" width="100%" id="table2" bgcolor="#3366CC">
+	<tr>
+		<td bgcolor="#006699"><font face="Blitz" color="#FFFFFF">Include &quot;DevilParticleSystem.bb&quot;<br>
+		<br>
+		Graphics3D 1024, 768, 32, 2<br>
+		SetBuffer BackBuffer()<br>
+		<br>
+		;Camera<br>
+		Cam = CreateCamera()<br>
+		<br>
+		;Initialise particle system<br>
+		InitParticles(Cam)<br>
+		<br>
+		;Create a template with the following properties:<br>
+		;the commands like SetEmitter...() will be explained soon!<br>
+		template = CreateTemplate()<br>
+		SetTemplateEmitterBlend(template, 1)<br>
+		SetTemplateInterval(template, 1)<br>
+		SetTemplateEmitterLifeTime(template, -1)<br>
+		SetTemplateParticleLifeTime(template, 30, 45)<br>
+		SetTemplateTexture(template, &quot;Media\Smoke.png&quot;, 2, 1)<br>
+		SetTemplateOffset(template, -.3, .3, -.3, .3, -.3, .3)<br>
+		SetTemplateVelocity(template, -.04, .04, .1, .2, -.04, .04)<br>
+		SetTemplateAlphaVel(template, True)<br>
+		SetTemplateSize(template, 3, 3, .5, 1.5)<br>
+		SetTemplateSizeVel(template, .01, 1.01)<br>
+		<br>
+		;Set up an emitter<br>
+		emitter = CreatePivot() ;The emitter can also be a mesh(don't have to be 
+		a pivot!)<br>
+		SetEmitter(emitter, template) ;Sets the template which was created to 
+		this emitter pivot<br>
+		<br>
+		;Main loop<br>
+		While Not KeyHit(1)<br>
+		PositionEntity emitter, Sin(MilliSecs() * .2) * 5, 0, 10 ;move the 
+		emitter<br>
+		UpdateParticles() ;Updates the particles and the emitters<br>
+		RenderWorld<br>
+		Flip<br>
+		Wend<br>
+		FreeParticles() ;Destroy the emitters, templates And particles<br>
+		End</font></td>
+	</tr>
+</table>
+<p><font face="Arial">Just run this code and you will see: It isn't really 
+difficult to create you own particle fx. Read the comments and try to understand 
+what the functions means. If you already understood the code(except the 
+functions like SetTemplate...()), you can try to change a few values, to see 
+what happens. If you feel, you are for the next step, just read further!<br>
+<br>
+<font size="4"><b>The template properties functions</b></font><br>
+<br>
+Now, we will try to understand those functions. They are for the properties of 
+the template. Just read one row of the table, try to understand. And then you 
+can try to change the sample above with your new knowledge!</font></p>
+<table border="2" style="border-collapse: collapse" id="table3" bgcolor="#FFFF00" width="1110">
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateEmitterBlend(param1)</font></td>
+		<td align="left" valign="top"><font face="Arial">You know, that every 
+		particles of an emitter are packed into one entity(into one surface). 
+		This command sets the blend mode of this entity.4</font></td>
+	</tr>
+	<tr>
+		<td width="497" valign="top" align="left"><font face="Arial">
+		SetTemplateInterval(param1)</font></td>
+		<td align="left" valign="top"><font face="Arial">This command decides 
+		about the reease rate of the particles! If param1 is 1, every loop a 
+		particle will release out of the emitter. If param1 is 5, in 5 loops one 
+		particle will release. That means, the bigger param1 is, the less 
+		particles will release.</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateParticlesPerInterval(param1)</font></td>
+		<td align="left" valign="top"><font face="Arial">If you want an emitter 
+		to release more then one particle per interval, you have to use this 
+		function. What &quot;interval&quot; means is explained up there. This function 
+		decides, how many particles will release per interval, so you have got 
+		full controll about the particle release rate!</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateMaxParticles(param1)</font></td>
+		<td align="left" valign="top"><font face="Arial">If you want an emitter 
+		not to release more than 500 particles for example, you have to use 
+		SetTemplateMaxParticles(template, 500). So there won't be more than 500 
+		particles on this emitter.</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateParticleLifeTime(param1, param2)</font></td>
+		<td align="left" valign="top"><font face="Arial">This command controlls 
+		about the life time of the particles. The life time of a particle means, 
+		how many loops a particle will live. A lifetime of 50 means, that the 
+		particle will live 50 loops. The life time of a particle will be 
+		Rand(param1, param2)</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateEmitterLifeTime(param1)</font></td>
+		<td align="left" valign="top"><font face="Arial">This commands controlls 
+		the life time of the emitter. Similar like in the command above, this 
+		command decides, how many loops an emitter will provide particles. If 
+		param1is -1, the emitter will provide particles for ever(until 
+		FreeParticles() is called)</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateEmitterTexture(path$, filter, mode)</font></td>
+		<td align="left" valign="top"><font face="Arial">If you want to texture 
+		the particles, you have to call this command. It will texture all 
+		particles of the emitter with the texture, which has been loaded from 
+		the path. You can set the texture filters and the texture blend mode.</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateOffset(min_ox#, max_ox#, min_oy#, max_oy#, min_oz#, max_oz#)</font></td>
+		<td align="left" valign="top"><font face="Arial">This is the start 
+		offset of the particles. When a particle is created, the position will 
+		be the coordinated of the emitter, and they will be offseted by those 
+		values.</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateVelocity(min_xv#, max_xv#, min_yv#, max_yv#, min_zv#, max_zv#)</font></td>
+		<td align="left" valign="top"><font face="Arial">This command sets the 
+		velocity of the particles. The particles will be translated by those 
+		values.</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateRotation(param1#, param2#)</font></td>
+		<td align="left" valign="top"><font face="Arial">This is a movement 
+		command, too. It rotated the particles. The rotation velocity of a 
+		particle will be Rand(param1, param2)</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateAlignToFall(align_to_fall, align_to_fall_offset = 0)</font></td>
+		<td align="left" valign="top"><font face="Arial">This command lets the 
+		particles align into the fall direction. This command is needed for 
+		spark effects. Set align_to_fall to true if you want them to align into 
+		the fall direction. align_to_fall_offset will be the rotation offset, 
+		the particles will have. The command SetTemplateRotation() will be 
+		ignored if align_to_fall is true!</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateGravity(param1)</font></td>
+		<td align="left" valign="top"><font face="Arial">This command sets the 
+		gravity to the particles. Normaly they don't have any gravity.</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateSize(sx#, sy#, sx#, sy#, size_multiplicator1# = 1, 
+		size_multiplicator2# = 1)</font></td>
+		<td align="left" valign="top"><font face="Arial">This command sets up 
+		the size of the particles. Every particle has got its own size 
+		multiplicator. That means that te size multiplicator of each particle 
+		will be Rand(sx#, sy#, size_multiplicator1# = 1, size_multiplicator2# = 
+		1).</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateSizeVel(size_add#, size_mult#)</font></td>
+		<td align="left" valign="top"><font face="Arial">This command decides 
+		the size velocity of the particles. The particle sized would be changed 
+		like this:<br>
+		<br>
+		SizeX = (SizeX + size_add#) * size_mult#<br>
+		SizeY = (SizeY + size_add#) * size_mult#</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateAlpha(param1)</font></td>
+		<td align="left" valign="top"><font face="Arial">This command is pretty 
+		easy. It sets up the alpha of each of the particles. 1 Means full 
+		visibility. 0 means not vilibly. The default is 1.</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateAlphaVel(param1)</font></td>
+		<td align="left" valign="top"><font face="Arial">If param1 is true, the 
+		particle alpha will fade out. If it is false, the particle will not fade 
+		out.</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateColors(param1, param2)</font></td>
+		<td align="left" valign="top"><font face="Arial">This command sets up 
+		the particle colors. Param1 is the start color, and param2 is the end 
+		color. The colors will be interpolated linear. Warning: The colors must 
+		be hex values, for example:<br>
+&nbsp;</font><p><font face="Arial">SetTemplateColors(template, $FFFFFF, $FFA300)</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateBrightness(param1)</font></td>
+		<td align="left" valign="top"><font face="Arial">If you want a particle 
+		to be more bright, you have to use this command. A brightness of 1 is a 
+		default brightness. A brightness of 2 is 2 times more bright, and so 
+		on... But don't choose a value which is to large, because this could 
+		slow down the game.</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateFloor(param1, param2)</font></td>
+		<td align="left" valign="top"><font face="Arial">param1 is the y 
+		coordinate for the particle floor. That means that particles will not 
+		get below this y coordinate. They will bounce up when they reach this 
+		coordinate. param2 is the bounce. A bounce of 1 means that the particle 
+		will jump as high as deep it falls. A bounce of 0 means that the 
+		particle won't jump up.</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateFixAngles(pitch_fix, yaw_fix)</font></td>
+		<td align="left" valign="top"><font face="Arial">This command is needed 
+		for rain. In a template for rain, the particles are pitch-fixed. That 
+		means, that the particles are fixed in the pitch axis, so the camera 
+		pitch won't change the pitch of the particles. This is also possible 
+		with the yaw axis.</font></td>
+	</tr>
+	<tr>
+		<td width="497" align="left" valign="top"><font face="Arial">
+		SetTemplateSubTemplate(param1)</font></td>
+		<td align="left" valign="top"><font face="Arial">If you want a template 
+		to have a sub template/template slot, you can set the sub template. 
+		Param1 is the sub template you want to hang on the main template.</font></td>
+	</tr>
+</table>
+<p><font face="Arial">This was the manual for the Devil Particle System. I hope, 
+you understood it.</font></p>
