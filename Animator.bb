@@ -1,5 +1,5 @@
 ; This tool allows you to take animation screenshots of an object.
-; © 2014 by Spark Fountain
+; (c) 2014 by Spark Fountain
 
 AppTitle("Animation Tool for Bounty Hunt City")
 Graphics3D(400,400,32,2)
@@ -21,7 +21,6 @@ Global animObject = LoadAnimMesh(path)
 
 ;animation frame
 Global animFrame# = 0
-
 
 While(Not(KeyHit(1)))
 	Cls()

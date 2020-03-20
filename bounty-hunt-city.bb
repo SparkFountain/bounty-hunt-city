@@ -1,5 +1,5 @@
 ; BOUNTY HUNT CITY
-; © 2014 by Spark Fountain
+; (c) 2014 by Spark Fountain
 
 ;GUI and Particle System
 Include "gui/DevilGUI.bb"

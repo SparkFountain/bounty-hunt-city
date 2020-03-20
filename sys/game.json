@@ -1,0 +1,15 @@
+{
+  "graphics": {
+    "screenWidth": 1024,
+    "screenHeight": 768,
+    "screenMode": 2,
+    "vsync": 1
+  },
+  "sound": {
+    "volumeAmbient": 0.6,
+    "volumeSpeech": 0.752941,
+    "volumeEffects": 0.423529,
+    "volumeMusic": 0.2
+  },
+  "language": "en"
+}
