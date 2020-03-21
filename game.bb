@@ -1,20 +1,32 @@
 ; INCLUDES
 Include "includes/const.bb"
-Include "includes/json-parser.bb"
+Include "includes/types.bb"
+; Include "includes/json-parser.bb"
+
+Include "includes/settings.bb"
+LoadDefaultSettings()
 
 ; INITIALIZE KEYBOARD SETTINGS
 Global keyForward, keyBackward, keyLeft, keyRight, keyJump, keyEnterVehicle, keyHandbrake, keyHorn, keyLight, keyRadio, keyAttack, keyNextWeapon, keyPreviousWeapon, keyFastSave, keyChat, keyFart, keyMob, keyPowerUp
-ParseJSON("sys/keys.json")
+; ParseJSON("sys/keys.json")
 
+;WaitKey
+;End
 
-WaitKey
-End
+AppTitle "Bounty Hunt City - v." + version
+SeedRnd MilliSecs()
 
-AppTitle "Bounty Hunt City"
-
-Graphics3D 800, 600, 32, 2
+Graphics3D screen\width, screen\height, screen\depth, screen\mode
 SetBuffer BackBuffer()
-Global frameTimer = CreateTimer(60)
+Global frameTimer = CreateTimer(screen\frameRate)
+
+Include "includes/sound.bb"
+Include "includes/gui.bb"
+Include "includes/hud.bb"
+Include "includes/maps.bb"
+Include "includes/gameplay.bb"
+
+Global ms ; contains the current milliseconds
 
 Global cam = CreateCamera()
 PositionEntity cam, 0, 10, 0
@@ -23,44 +35,40 @@ RotateEntity cam, 90, 0, 0
 Global light = CreateLight()
 RotateEntity light, 90, 0, 0
 
+; LOAD TEST MAP
+LoadMap("test-city")
+
 ; LOAD EXAMPLE VEHICLE
 Global carTexture = LoadTexture("gfx/vehicles/car1.png", 4)
 
+; TODO: remove again
+Global test = LoadImage("includes/cash.png")
+
+InitPlayer()
+
 CreateCar()
 
-;Local i
-;For i=-20 To 20 Step 5
-;	Local cube = CreateCube()
-;	PositionEntity cube, i, 0, 0
-;	EntityTexture cube, carTexture
-;Next
+While Not KeyHit(KEY_ESCAPE)
+	ms = MilliSecs()
 
-
-Global plane = CreatePlane()
-EntityColor plane, 0, 255, 0
-
-
-While Not KeyHit(1)
 	Cls
 	WaitTimer frameTimer
+
+	AnimateWater()
+	PlayerControls()
 	
 	UpdateWorld
 	RenderWorld
+
+	Hud()
+
+	; DEBUG TEXTS
 	
-	MoveCube()
-	
-	Flip
+	Flip screen\vsync
 Wend
 End
 
 
-
-
-; FUNCTIONS
-Function MoveCube()
-	If KeyDown(ARROW_UP) Then MoveEntity cam, 0, 0.1, 0 
-	If KeyDown(ARROW_DOWN) Then MoveEntity cam, 0, -0.1, 0 
-End Function
 
 Function CreateCar()
 	mesh = CreateMesh() 
@@ -78,5 +86,3 @@ Function CreateCar()
 	
 	ScaleEntity mesh, 1, 1, 0.5
 End Function
-;~IDEal Editor Parameters:
-;~C#Blitz3D
