@@ -6,7 +6,8 @@ Type T_Player
     Field x#, y#, z#
     Field pitch#, yaw#, roll#
     Field energy#, maxEnergy#
-    Field weapon[8], activeWeapon
+    Field weapon$[9], activeWeapon
+    Field cash
 End Type
 
 Function InitPlayer()
@@ -36,13 +37,19 @@ Function InitPlayer()
     PositionEntity cam, player\x, player\y + 20, player\z
 
     ; Collision Handling
-    EntityRadius player\entity, 1
+    EntityRadius player\entity, 0.5
     EntityType player\entity, COLLISION_PLAYER
     Collisions COLLISION_PLAYER, COLLISION_VEHICLE, COLLISION_METHOD_SPHERE_BOX, COLLISION_REACTION_STOP
     Collisions COLLISION_PLAYER, COLLISION_HUMAN, COLLISION_METHOD_SPHERE_BOX, COLLISION_REACTION_SLIDE  ; TODO: slide or stop?
 
     ; Energy
     player\energy = 100 : player\maxEnergy = 100
+
+    ; Cash
+    player\cash = 135289 ; TODO: set to 0 later
+
+    ; Weapons
+    player\weapon[1] = "Pistol"
 End Function
 
 Function PlayerControls()
@@ -59,11 +66,11 @@ Function PlayerControls()
         walking = True
     EndIf
     If KeyDown(KEY_ARROW_LEFT) Or KeyDown(KEY_A) Then
-        TurnEntity player\entity, 0, 3, 0
+        TurnEntity player\entity, 0, 3.5, 0
         turning = True
     EndIf
     If KeyDown(KEY_ARROW_RIGHT) Or KeyDown(KEY_D) Then
-        TurnEntity player\entity, 0, -3, 0
+        TurnEntity player\entity, 0, -3.5, 0
         turning = True
     EndIf
 
@@ -98,7 +105,42 @@ Function PlayerControls()
     ; HANDLE WEAPON
     If KeyDown(KEY_CTRL_LEFT) Then
         Select player\activeWeapon
-            Case 0
+            Case 0 ; Melee
+            
+            Case 1 ; Pistol
+                Local pistol.T_Pistol
+                For pistol.T_Pistol = Each T_Pistol
+                    If player\weapon[1] = pistol\name Then
+                        If ms > lastWeaponTrigger(1) + pistol\shotInterval Then
+                            lastWeaponTrigger(1) = ms ; update trigger time
+                            PlaySound pistol\shotSound
+                            Local bullet.T_Bullet = New T_Bullet
+                            bullet\entity = CopyEntity(pistol\bulletEntity)
+                            bullet\speed = pistol\bulletSpeed
+                            bullet\lifeTime = ms + pistol\bulletLifeTime
+                            bullet\damage = pistol\damage
+                            PositionEntity bullet\entity, player\x, player\y, player\z
+                            RotateEntity bullet\entity, player\pitch, player\yaw, player\roll
+                            MoveEntity bullet\entity, 0, 0, 1
+                            ShowEntity bullet\entity
+                        EndIf
+                    EndIf
+                Next
+            Case 2 ; Machine Pistol
+            
+            Case 3 ; Machine Gun
+           
+            Case 4 ; Rifle
+           
+            Case 5 ; Grenade
+           
+            Case 6 ; Molotov Cocktail
+           
+            Case 7 ; Flame Thrower
+           
+            Case 8 ; Electro Weapon
+           
+            Case 9 ; Rocket Launcher
         End Select
     EndIf
 
@@ -115,8 +157,4 @@ Function PlayerControls()
 
     ; FART
     If KeyHit(KEY_TAB) And (Not ChannelPlaying(channelFart)) Then channelFart = PlaySound(soundFart(Rand(0,3)))
-End Function
-
-Function CollisionDetection()
-    
 End Function

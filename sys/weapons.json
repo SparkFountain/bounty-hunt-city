@@ -5,7 +5,7 @@
     "ammoPerMagazine": 10,
     "damage": 5,
     "speed": 0.55,
-    "lifetime": 20
+    "lifetime": 100
   },
   "machine pistol": {
     "type": "shoot",

@@ -1,3 +1,4 @@
+; TODO: use several water layers with transparency
 Global water = CreatePlane()
 EntityTexture water, LoadTexture("gfx/water.png")
 ScaleEntity water, 10, 1, 10
@@ -13,7 +14,7 @@ Function LoadMap(name$)
     ElseIf heightmapExists = 1 Then
         map = LoadTerrain("maps/" + name + "/heightmap.png")
         ScaleEntity map, 1, 10, 1
-        PositionEntity map, 100, 0, 100
+        PositionEntity map, 20, 0, 20
     EndIf
 
     ; TODO: change color map path
@@ -23,6 +24,16 @@ Function LoadMap(name$)
 
     TerrainShading map, True
     TerrainDetail map, 10000
+End Function
+
+Function InitTestMap()
+    Local car.T_Car = New T_Car
+    Local carDef.T_Vehicle_Definition = First T_Vehicle_Definition
+    car\entity = CopyEntity(carDef\entity) : ShowEntity car\entity
+    car\speed = 0
+    car\maxSpeed = carDef\maxSpeed
+    car\energy = 5
+    car\maxEnergy# = carDef\energy
 End Function
 
 Function AnimateWater()
