@@ -56,6 +56,7 @@ While Not KeyHit(KEY_ESCAPE)
 
 	AnimateWater()
 	PlayerControls()
+	CollisionDetection()
 	
 	UpdateWorld
 	RenderWorld
@@ -63,6 +64,15 @@ While Not KeyHit(KEY_ESCAPE)
 	Hud()
 
 	; DEBUG TEXTS
+	text 0, 0, "Active Weapon: " + player\activeWeapon
+
+	col = CountCollisions(player\entity)
+	Text 0, 0, "Kollision(en):"
+	For i = 1 To col
+		Text 000, i * 20, "Entity=" + CollisionEntity(player\entity, i)
+		Text 150, i * 20, "Surface=" + CollisionSurface(player\entity, i)
+		Text 300, i * 20, "Triangle=" + CollisionTriangle(player\entity, i)
+	Next
 	
 	Flip screen\vsync
 Wend
@@ -71,18 +81,22 @@ End
 
 
 Function CreateCar()
-	mesh = CreateMesh() 
-	surf = CreateSurface(mesh) 
+	car = CreateMesh() 
+	surf = CreateSurface(car) 
 	
-	v0 = AddVertex (surf, -1, 1, -1, 0, 0) 
-	v1 = AddVertex (surf,  1, 1, -1, 0, 1) 
-	v2 = AddVertex (surf,  1, 1,  1, 1, 1)
-	v3 = AddVertex (surf, -1, 1,  1, 1, 0)
+	v0 = AddVertex (surf, -1, 1, -1, 0, 1) 
+	v1 = AddVertex (surf,  1, 1, -1, 1, 1) 
+	v2 = AddVertex (surf,  1, 1,  1, 1, 0)
+	v3 = AddVertex (surf, -1, 1,  1, 0, 0)
 	
 	tri1 = AddTriangle (surf,v0,v2,v1)
 	tri2 = AddTriangle (surf,v0,v3,v2)
 	
-	EntityTexture mesh, carTexture
-	
-	ScaleEntity mesh, 1, 1, 0.5
+	EntityTexture car, carTexture
+
+	EntityBox car, -1, -1, -2.5, 2, 2, 5
+	EntityType car, COLLISION_VEHICLE
+
+	PositionEntity car, 10, 0, 0
+	ScaleEntity car, 1.5, 3, 3
 End Function

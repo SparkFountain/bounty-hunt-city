@@ -6,26 +6,43 @@ Type T_Player
     Field x#, y#, z#
     Field pitch#, yaw#, roll#
     Field energy#, maxEnergy#
-    Field weapon[8]
+    Field weapon[8], activeWeapon
 End Type
 
 Function InitPlayer()
+    Local entity = CreateMesh() 
+	Local surf = CreateSurface(entity) 
+	
+	Local v0 = AddVertex(surf, -1, 1, -1, 0, 1) 
+	Local v1 = AddVertex(surf,  1, 1, -1, 1, 1) 
+	Local v2 = AddVertex(surf,  1, 1,  1, 1, 0)
+	Local v3 = AddVertex(surf, -1, 1,  1, 0, 0)
+	
+	Local tri1 = AddTriangle(surf,v0,v2,v1)
+	Local tri2 = AddTriangle(surf,v0,v3,v2)
+
     player = New T_Player
-    player\entity = CreateCube()
-    ; RotateEntity player\entity, 0, 180, 0
+    player\entity = entity
     player\texture = LoadAnimTexture("gfx/humans/player/walk.png", 4, 64, 64, 0, 15)
     EntityTexture player\entity, player\texture
     player\textureFrame = 14
-    player\nextFrameTime = ms + 100
+    player\nextFrameTime = ms + FRAME_DELAY
 
+    ; Position and Orientation
     player\x = 0 : player\z = 0 : player\y = TerrainY(map, player\x, 0, player\z)
     player\pitch = 0 : player\yaw = 0 : player\roll = 0
-
-    player\energy = 100 : player\maxEnergy = 100
-
     PositionEntity player\entity, player\x, player\y, player\z
     ; center camera to player
     PositionEntity cam, player\x, player\y + 20, player\z
+
+    ; Collision Handling
+    EntityRadius player\entity, 1
+    EntityType player\entity, COLLISION_PLAYER
+    Collisions COLLISION_PLAYER, COLLISION_VEHICLE, COLLISION_METHOD_SPHERE_BOX, COLLISION_REACTION_STOP
+    Collisions COLLISION_PLAYER, COLLISION_HUMAN, COLLISION_METHOD_SPHERE_BOX, COLLISION_REACTION_SLIDE  ; TODO: slide or stop?
+
+    ; Energy
+    player\energy = 100 : player\maxEnergy = 100
 End Function
 
 Function PlayerControls()
@@ -33,19 +50,19 @@ Function PlayerControls()
     Local turning = False
     local walking = False
 
-    If KeyDown(KEY_ARROW_UP) Then
+    If KeyDown(KEY_ARROW_UP) Or KeyDown(KEY_W) Then
         MoveEntity player\entity, 0, 0, 0.1
         walking = True
     EndIf
-    If KeyDown(KEY_ARROW_DOWN) Then
+    If KeyDown(KEY_ARROW_DOWN) Or KeyDown(KEY_S) Then
         MoveEntity player\entity, 0, 0, -0.1
         walking = True
     EndIf
-    If KeyDown(KEY_ARROW_LEFT) Then
+    If KeyDown(KEY_ARROW_LEFT) Or KeyDown(KEY_A) Then
         TurnEntity player\entity, 0, 3, 0
         turning = True
     EndIf
-    If KeyDown(KEY_ARROW_RIGHT) Then
+    If KeyDown(KEY_ARROW_RIGHT) Or KeyDown(KEY_D) Then
         TurnEntity player\entity, 0, -3, 0
         turning = True
     EndIf
@@ -78,6 +95,28 @@ Function PlayerControls()
         EntityTexture player\entity, player\texture, player\textureFrame
     EndIf
 
+    ; HANDLE WEAPON
+    If KeyDown(KEY_CTRL_LEFT) Then
+        Select player\activeWeapon
+            Case 0
+        End Select
+    EndIf
+
+    ; CHANGE WEAPON
+    If KeyHit(KEY_Y) Then
+        If player\activeWeapon = 0 Then
+            player\activeWeapon = 9
+        Else
+            player\activeWeapon = player\activeWeapon - 1
+        EndIf
+    ElseIf KeyHit(KEY_X) Then
+        player\activeWeapon = (player\activeWeapon + 1) Mod 10
+    EndIf
+
     ; FART
     If KeyHit(KEY_TAB) And (Not ChannelPlaying(channelFart)) Then channelFart = PlaySound(soundFart(Rand(0,3)))
+End Function
+
+Function CollisionDetection()
+    
 End Function
