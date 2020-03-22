@@ -24,6 +24,7 @@ Include "includes/maps.bb"
 Include "includes/weapons.bb"
 Include "includes/vehicles.bb"
 Include "includes/gameplay.bb"
+Include "includes/environment.bb"
 
 Global ms ; contains the current milliseconds
 
@@ -49,10 +50,12 @@ While Not KeyHit(KEY_ESCAPE)
 	Cls
 	WaitTimer frameTimer
 
+	DayNightCicle()
 	AnimateWater()
 	PlayerControls()
 	UpdateAmmo()
 	UpdateVehicles()
+	PlayRadio()
 	
 	UpdateWorld
 	RenderWorld
@@ -60,7 +63,7 @@ While Not KeyHit(KEY_ESCAPE)
 	Hud()
 
 	; DEBUG INFORMATION
-	Text 0, 0, "Active Weapon: " + player\activeWeapon
+	Text screen\width / 2, 0, "Active Weapon: " + player\activeWeapon, screen\width / 2
 	
 	Flip screen\vsync
 Wend

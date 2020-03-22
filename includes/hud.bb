@@ -1,5 +1,7 @@
 Global hudCash = LoadImage("gfx/hud/cash.png")
-Global hudLife = LoadAnimImage("gfx/hud/life.png", 32, 32, 0, 20)
+Global hudLife = LoadImage("gfx/hud/life.png")
+Global hudCops = LoadImage("gfx/hud/cops.png")
+Global hudReticle = LoadImage("gfx/hud/reticle.png")
 
 Const hudPaddingHorizontal = 20
 Const hudPaddingVertical = 10
@@ -8,7 +10,7 @@ Global testHudFont = LoadFont("Verdana", 24, True)
 
 Function Hud()
     DrawImage hudCash, screen\width - ImageWidth(hudCash) - hudPaddingHorizontal, hudPaddingVertical
-    DrawImage hudLife, screen\width - ImageWidth(hudCash) - hudPaddingHorizontal, hudPaddingVertical + ImageHeight(hudCash) + 10, (player\energy / player\maxEnergy) * 20 - 1
+    DrawImage hudLife, screen\width - ImageWidth(hudLife) - hudPaddingHorizontal, hudPaddingVertical + ImageHeight(hudCash) + 10
 
     SetFont testHudFont
     Local cashText$ = CashText()
@@ -16,6 +18,11 @@ Function Hud()
 
     Local lifeText$ = Str(Int(player\energy))
     Text screen\width - ImageWidth(hudLife) - hudPaddingHorizontal - StringWidth(lifeText) - 20, hudPaddingVertical + ImageHeight(hudCash) + 15, lifeText
+
+    DrawImage hudCops, hudPaddingHorizontal, hudPaddingVertical
+    Text hudPaddingHorizontal + ImageWidth(hudCops) + 20, hudPaddingVertical + 12, player\copLevel
+
+    DrawImage hudReticle, hudPaddingHorizontal, hudPaddingVertical + ImageHeight(hudCops) + 15
 End Function
 
 Function CashText$()
@@ -28,5 +35,5 @@ Function CashText$()
         If (i+1) Mod 3 = 0 And i > 0 And i <> cashLength-1 Then formattedCashString = "." + formattedCashString
     Next
 
-    Return "$ " + formattedCashString
+    Return formattedCashString
 End Function

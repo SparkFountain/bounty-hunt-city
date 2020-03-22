@@ -36,11 +36,12 @@ Function LoadTestVehicles()
     Local car.T_Vehicle_Definition = new T_Vehicle_Definition
     car\name = "Brummi"
     car\entity = CreateVehicleEntity(1.3, 2.6, LoadTexture("gfx/vehicles/car1.png", TEXTURE_MASKED))
-    car\maxSpeed = 90
-    car\acceleration = 0.01
-    car\friction = 0.006
+    car\maxSpeed = 0.5
+    car\acceleration = 0.007
+    car\friction = 0.003
     car\energy = 100
     car\engineSound = Load3DSound("sfx/vehicles/car1.ogg")
+    car\hornSound = Load3DSound("sfx/vehicles/horn1.ogg")
 End Function
 
 Function CreateVehicleEntity(width#, height#, texture)
@@ -93,6 +94,8 @@ Function UpdateVehicles()
             ; DebugLog "Acceleration: " + car\acceleration
             ; DebugLog "Friction: " + car\friction
             ; DebugLog "Speed: " + car\speed
+
+            If ChannelPlaying(car\hornChannel) Then DebugLog "Horn playing"
 
             ; move car
             MoveEntity car\entity, 0, 0, car\speed

@@ -8,6 +8,7 @@ Type T_Player
     Field energy#, maxEnergy#
     Field weapon$[9], activeWeapon
     Field cash
+    Field copLevel, huntLevel ; how many cops and hunters are purchasing the player
     Field listener
     Field vehicle ; in which vehicle the player is currently situated
 End Type
@@ -142,20 +143,24 @@ Function PlayerControls()
             Local closestCar.T_Car = Null
             Local minDistance = 0
             For car.T_Car = Each T_Car
-                Local distance = EntityDistance(player\entity, car\entity)
-                If minDistance = 0 Or distance < minDistance Then
-                    minDistance = distance
-                    closestCar = car
+                If car\energy > 0 Then
+                    Local distance = EntityDistance(player\entity, car\entity)
+                    If minDistance = 0 Or distance < minDistance Then
+                        minDistance = distance
+                        closestCar = car
+                    EndIf
                 EndIf
             Next
 
-            HideEntity player\entity
-            player\vehicle = Handle(closestCar)
-            player\x = EntityX(closestCar\entity)
-            player\y = EntityY(closestCar\entity)
-            player\z = EntityZ(closestCar\entity)
-            PositionEntity player\entity, player\x, player\y, player\z
-            PositionEntity cam, player\x, player\y + 20, player\z
+            If closestCar <> Null Then
+                HideEntity player\entity
+                player\vehicle = Handle(closestCar)
+                player\x = EntityX(closestCar\entity)
+                player\y = EntityY(closestCar\entity)
+                player\z = EntityZ(closestCar\entity)
+                PositionEntity player\entity, player\x, player\y, player\z
+                PositionEntity cam, player\x, player\y + 20, player\z
+            EndIf
         Else ; leave
             ; calculate player position and angles
             car.T_Car = Object.T_Car(player\vehicle)
@@ -170,7 +175,7 @@ Function PlayerControls()
     EndIf
 
     ; HANDLE WEAPON
-    If KeyDown(KEY_CTRL_LEFT) Then
+    If KeyDown(KEY_CTRL_LEFT) And player\vehicle = 0 Then
         Select player\activeWeapon
             Case 0 ; Melee
             
@@ -223,5 +228,34 @@ Function PlayerControls()
     EndIf
 
     ; FART
-    If KeyHit(KEY_TAB) And (Not ChannelPlaying(channelFart)) Then channelFart = PlaySound(soundFart(Rand(0,3)))
+    If KeyHit(KEY_TAB) And player\vehicle = 0 Then
+        If Not ChannelPlaying(channelFart) Then channelFart = PlaySound(soundFart(Rand(0,3)))
+    EndIf
+
+    ; HORN
+    car.T_Car = Object.T_Car(player\vehicle)
+    If car <> Null Then
+        If KeyDown(KEY_TAB) Then
+            If Not ChannelPlaying(car\hornChannel) Then car\hornChannel = EmitSound(car\hornSound, player\listener)
+        Else
+            If ChannelPlaying(car\hornChannel) Then StopChannel car\hornChannel
+        EndIf
+    EndIf
+
+    ; CHANGE RADIO CHANNEL
+    If player\vehicle <> 0 Then
+        If KeyHit(KEY_X) Then ; next channel
+            If radioSelected = 9 Then
+                radioSelected = radioSelected + 1
+            Else
+                radioSelected = 0
+            EndIf
+        ElseIf KeyHit(KEY_Y) ; previous channel
+            If radioSelected = 0 Then
+                radioSelected = 9
+            Else
+                radioSelected = radioSelected - 1
+            EndIf
+        EndIf
+    EndIf
 End Function
