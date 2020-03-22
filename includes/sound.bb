@@ -6,7 +6,7 @@ soundFart(3) = LoadSound("sfx/fart3.mp3")
 Global channelFart
 
 Dim radio(9)
-radio(5) = LoadSound("sfx/radio/Wild Horse.mp3")
+;radio(5) = LoadSound("sfx/radio/Wild Horse.mp3")
 Global radioChannel
 Global radioSelected = 5 ; to which radio station the user is listening
 

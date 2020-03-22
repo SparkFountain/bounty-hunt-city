@@ -97,6 +97,13 @@ Function UpdateVehicles()
 
             If ChannelPlaying(car\hornChannel) Then DebugLog "Horn playing"
 
+            ; position car on terrain
+            Local x# = EntityX(car\entity)
+            Local y# = EntityY(car\entity)
+            Local z# = EntityZ(car\entity)
+            Local deltaY# = TerrainY(map, x, 0, z) - y
+            TranslateEntity car\entity, 0, deltaY, 0
+
             ; move car
             MoveEntity car\entity, 0, 0, car\speed
 
