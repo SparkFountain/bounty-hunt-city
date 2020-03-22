@@ -14,10 +14,10 @@ End Function
 
 Function LoadDefaultSettings()
     screen.T_Screen = new T_Screen
-    screen\width = 1024
-    screen\height = 768
+    screen\width = 1920
+    screen\height = 1080
     screen\depth = 32
-    screen\mode = SCREEN_MODE_WINDOWED_FIX
+    screen\mode = SCREEN_MODE_FULLSCREEN
     screen\frameRate = 60
     screen\vsync = 1
 

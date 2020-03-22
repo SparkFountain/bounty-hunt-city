@@ -37,7 +37,7 @@ Function InitPlayer()
     player\pitch = 0 : player\yaw = 0 : player\roll = 0
     PositionEntity player\entity, player\x, player\y, player\z
     ; center camera to player
-    PositionEntity cam, player\x, player\y + 20, player\z
+    PositionEntity cam, player\x, player\y + CAMERA_HEIGHT, player\z
 
     ; Collision Handling
     EntityRadius player\entity, 0.5
@@ -139,7 +139,7 @@ Function PlayerControls()
     PositionEntity player\listener, player\x, player\y, player\z
 
     ; center camera to player
-    PositionEntity cam, player\x, player\y + 20, player\z
+    PositionEntity cam, player\x, player\y + CAMERA_HEIGHT, player\z
 
     ; ENTER / LEAVE VEHICLE
     If KeyHit(KEY_ENTER) Then
@@ -164,7 +164,7 @@ Function PlayerControls()
                 player\y = EntityY(closestCar\entity)
                 player\z = EntityZ(closestCar\entity)
                 PositionEntity player\entity, player\x, player\y, player\z
-                PositionEntity cam, player\x, player\y + 20, player\z
+                PositionEntity cam, player\x, player\y + CAMERA_HEIGHT, player\z
             EndIf
         Else ; leave
             ; calculate player position and angles

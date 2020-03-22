@@ -29,7 +29,7 @@ Include "includes/environment.bb"
 Global ms ; contains the current milliseconds
 
 Global cam = CreateCamera()
-PositionEntity cam, 0, 10, 0
+PositionEntity cam, 0, 30, 0
 RotateEntity cam, 90, 0, 0
 
 Global light = CreateLight()
