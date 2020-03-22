@@ -34,6 +34,7 @@ Function InitTestMap()
     car\maxSpeed = carDef\maxSpeed
     car\energy = 5
     car\maxEnergy# = carDef\energy
+    car\engineSound = carDef\engineSound
 End Function
 
 Function AnimateWater()

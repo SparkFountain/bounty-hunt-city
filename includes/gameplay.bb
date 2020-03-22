@@ -8,6 +8,7 @@ Type T_Player
     Field energy#, maxEnergy#
     Field weapon$[9], activeWeapon
     Field cash
+    Field listener
 End Type
 
 Function InitPlayer()
@@ -50,6 +51,10 @@ Function InitPlayer()
 
     ; Weapons
     player\weapon[1] = "Pistol"
+
+    ; 3D Sound Listener
+    player\listener = CreatePivot()
+    CreateListener(player\listener, 0.4, 1, 10)
 End Function
 
 Function PlayerControls()
@@ -85,6 +90,9 @@ Function PlayerControls()
 
         ; apply vertical height (y) to player
         PositionEntity player\entity, player\x, player\y, player\z
+
+        ; update listener position
+        PositionEntity player\listener, player\x, player\y, player\z
     EndIf
 
     If walking Then

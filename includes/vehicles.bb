@@ -3,6 +3,8 @@ Type T_Vehicle_Definition
 	Field entity
 	Field maxSpeed#
 	Field energy#
+    Field engineSound
+    Field hornSound
 End Type
 
 Type T_Car
@@ -11,7 +13,9 @@ Type T_Car
     Field maxSpeed#
     Field energy#
     Field maxEnergy#
-    Field motorChannel
+    Field engineSound
+    Field engineChannel
+    Field hornSound
 	Field hornChannel
 	Field damageEmitter, damageEmitterLevel
 End Type
@@ -30,6 +34,7 @@ Function LoadTestVehicles()
     car\entity = CreateVehicleEntity(1.3, 2.6, LoadTexture("gfx/vehicles/car1.png", TEXTURE_MASKED))
     car\maxSpeed = 90
     car\energy = 100
+    car\engineSound = Load3DSound("sfx/vehicles/car1.ogg")
 End Function
 
 Function CreateVehicleEntity(width#, height#, texture)
@@ -66,6 +71,12 @@ Function UpdateVehicles()
             ; TODO: add explosion effect
             ; TODO: use separate texture or only darken color?
             EntityColor car\entity, 50, 50, 50
+        Else
+            ; emit engine sound
+            If Not ChannelPlaying(car\engineChannel) Then
+                DebugLog "Should play engine sound"
+                car\engineChannel = EmitSound(car\engineSound, car\entity)
+            EndIf
         EndIf
     Next
 End Function
