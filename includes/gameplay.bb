@@ -104,6 +104,11 @@ Function PlayerControls()
                 player\nextFrameTime = ms + FRAME_DELAY
                 EntityTexture player\entity, player\texture, player\textureFrame
             EndIf
+
+            If Not ChannelPlaying(walkChannel) Then
+                walkChannel = PlaySound(soundWalk(Rand(0,3)))
+                ChannelVolume walkChannel, 0.5
+            EndIf
         Else
             player\textureFrame = 14
             EntityTexture player\entity, player\texture, player\textureFrame

@@ -74,11 +74,13 @@ End Function
 Function UpdateVehicles()
     Local car.T_Car
     For car.T_Car = Each T_Car
-        If car\energy <= 0 Then
+        If car\energy <= 0 And car\energy > -1000 Then
             ; TODO: add explosion effect
             ; TODO: use separate texture
             EntityColor car\entity, 50, 50, 50
             StopChannel car\engineChannel
+            PlaySound(soundExplosion(Rand(0,0)))
+            car\energy = -1000
         Else
             If car\speed <> 0 Then ; slow down because of friction
                 If car\speed > 0 Then
@@ -95,7 +97,7 @@ Function UpdateVehicles()
             ; DebugLog "Friction: " + car\friction
             ; DebugLog "Speed: " + car\speed
 
-            If ChannelPlaying(car\hornChannel) Then DebugLog "Horn playing"
+            ; If ChannelPlaying(car\hornChannel) Then DebugLog "Horn playing"
 
             ; position car on terrain
             Local x# = EntityX(car\entity)

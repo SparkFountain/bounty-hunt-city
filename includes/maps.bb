@@ -37,6 +37,8 @@ Function InitTestMap()
     car\maxEnergy# = carDef\energy
     car\engineSound = carDef\engineSound
     car\hornSound = carDef\hornSound
+
+    If Not ChannelPlaying(ambientChannel) Then ambientChannel = PlaySound(soundAmbient(Rand(0,1)))
 End Function
 
 Function AnimateWater()
