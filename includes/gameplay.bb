@@ -9,6 +9,7 @@ Type T_Player
     Field weapon$[9], activeWeapon
     Field cash
     Field listener
+    Field vehicle ; in which vehicle the player is currently situated
 End Type
 
 Function InitPlayer()
@@ -58,56 +59,114 @@ Function InitPlayer()
 End Function
 
 Function PlayerControls()
+    Local car.T_Car
+
     ; MOTION
-    Local turning = False
-    local walking = False
+    If player\vehicle = 0 Then ; on foot
+        Local turning = False
+        local walking = False
 
-    If KeyDown(KEY_ARROW_UP) Or KeyDown(KEY_W) Then
-        MoveEntity player\entity, 0, 0, 0.1
-        walking = True
-    EndIf
-    If KeyDown(KEY_ARROW_DOWN) Or KeyDown(KEY_S) Then
-        MoveEntity player\entity, 0, 0, -0.1
-        walking = True
-    EndIf
-    If KeyDown(KEY_ARROW_LEFT) Or KeyDown(KEY_A) Then
-        TurnEntity player\entity, 0, 3.5, 0
-        turning = True
-    EndIf
-    If KeyDown(KEY_ARROW_RIGHT) Or KeyDown(KEY_D) Then
-        TurnEntity player\entity, 0, -3.5, 0
-        turning = True
-    EndIf
+        If KeyDown(KEY_ARROW_UP) Or KeyDown(KEY_W) Then
+            MoveEntity player\entity, 0, 0, 0.1
+            walking = True
+        EndIf
+        If KeyDown(KEY_ARROW_DOWN) Or KeyDown(KEY_S) Then
+            MoveEntity player\entity, 0, 0, -0.1
+            walking = True
+        EndIf
+        If KeyDown(KEY_ARROW_LEFT) Or KeyDown(KEY_A) Then
+            TurnEntity player\entity, 0, 3.5, 0
+            turning = True
+        EndIf
+        If KeyDown(KEY_ARROW_RIGHT) Or KeyDown(KEY_D) Then
+            TurnEntity player\entity, 0, -3.5, 0
+            turning = True
+        EndIf
 
-    If turning Or walking then
-        ; calculate player position and angles
-        player\x = EntityX(player\entity)
-        player\z = EntityZ(player\entity)
-        player\y = TerrainY(map, player\x, 0, player\z) + 1
-        player\pitch = EntityPitch(player\entity)
-        player\yaw = EntityYaw(player\entity)
-        player\roll = EntityRoll(player\entity)
+        If turning Or walking Then
+            ; calculate player position and angles
+            player\x = EntityX(player\entity)
+            player\z = EntityZ(player\entity)
+            player\y = TerrainY(map, player\x, 0, player\z) + 1
+            player\pitch = EntityPitch(player\entity)
+            player\yaw = EntityYaw(player\entity)
+            player\roll = EntityRoll(player\entity)
 
-        ; apply vertical height (y) to player
-        PositionEntity player\entity, player\x, player\y, player\z
+            ; apply vertical height (y) to player
+            PositionEntity player\entity, player\x, player\y, player\z
+        EndIf
 
-        ; update listener position
-        PositionEntity player\listener, player\x, player\y, player\z
-    EndIf
-
-    If walking Then
-        ; animate player
-        If player\nextFrameTime < ms Then
-            player\textureFrame = (player\textureFrame + 1) Mod 15
-            player\nextFrameTime = ms + FRAME_DELAY
+        If walking Then
+            ; animate player
+            If player\nextFrameTime < ms Then
+                player\textureFrame = (player\textureFrame + 1) Mod 15
+                player\nextFrameTime = ms + FRAME_DELAY
+                EntityTexture player\entity, player\texture, player\textureFrame
+            EndIf
+        Else
+            player\textureFrame = 14
             EntityTexture player\entity, player\texture, player\textureFrame
+        EndIf
+    Else ; in vehicle
+        car.T_Car = Object.T_Car(player\vehicle)
+
+        If KeyDown(KEY_ARROW_UP) Or KeyDown(KEY_W) Then
+            car\speed = car\speed + car\acceleration
+        EndIf
+        If KeyDown(KEY_ARROW_DOWN) Or KeyDown(KEY_S) Then
+            car\speed = car\speed - car\acceleration
+        EndIf
+        If (KeyDown(KEY_ARROW_LEFT) Or KeyDown(KEY_A)) AND car\speed <> 0 Then
+            TurnEntity car\entity, 0, 1, 0
+        EndIf
+        If (KeyDown(KEY_ARROW_RIGHT) Or KeyDown(KEY_D)) AND car\speed <> 0 Then
+            TurnEntity car\entity, 0, -1, 0
         EndIf
 
         ; center camera to player
-        PositionEntity cam, player\x, player\y + 20, player\z
-    Else
-        player\textureFrame = 14
-        EntityTexture player\entity, player\texture, player\textureFrame
+        player\x = EntityX(car\entity)
+        player\y = EntityY(car\entity)
+        player\z = EntityZ(car\entity)
+    EndIf
+
+    ; update listener position
+    PositionEntity player\listener, player\x, player\y, player\z
+
+    ; center camera to player
+    PositionEntity cam, player\x, player\y + 20, player\z
+
+    ; ENTER / LEAVE VEHICLE
+    If KeyHit(KEY_ENTER) Then
+        If player\vehicle = 0 Then ; enter
+            ; find closest car
+            Local closestCar.T_Car = Null
+            Local minDistance = 0
+            For car.T_Car = Each T_Car
+                Local distance = EntityDistance(player\entity, car\entity)
+                If minDistance = 0 Or distance < minDistance Then
+                    minDistance = distance
+                    closestCar = car
+                EndIf
+            Next
+
+            HideEntity player\entity
+            player\vehicle = Handle(closestCar)
+            player\x = EntityX(closestCar\entity)
+            player\y = EntityY(closestCar\entity)
+            player\z = EntityZ(closestCar\entity)
+            PositionEntity player\entity, player\x, player\y, player\z
+            PositionEntity cam, player\x, player\y + 20, player\z
+        Else ; leave
+            ; calculate player position and angles
+            car.T_Car = Object.T_Car(player\vehicle)
+            player\x = EntityX(car\entity)
+            player\z = EntityZ(car\entity)
+            player\y = TerrainY(map, player\x, 0, player\z) + 1
+            PositionEntity player\entity, player\x, player\y, player\z
+
+            ShowEntity player\entity
+            player\vehicle = 0
+        EndIf
     EndIf
 
     ; HANDLE WEAPON

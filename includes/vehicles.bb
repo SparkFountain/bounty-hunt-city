@@ -2,6 +2,8 @@ Type T_Vehicle_Definition
 	Field name$
 	Field entity
 	Field maxSpeed#
+    Field acceleration#
+    Field friction#
 	Field energy#
     Field engineSound
     Field hornSound
@@ -11,6 +13,8 @@ Type T_Car
     Field entity
     Field speed#
     Field maxSpeed#
+    Field acceleration#
+    Field friction#
     Field energy#
     Field maxEnergy#
     Field engineSound
@@ -33,6 +37,8 @@ Function LoadTestVehicles()
     car\name = "Brummi"
     car\entity = CreateVehicleEntity(1.3, 2.6, LoadTexture("gfx/vehicles/car1.png", TEXTURE_MASKED))
     car\maxSpeed = 90
+    car\acceleration = 0.01
+    car\friction = 0.006
     car\energy = 100
     car\engineSound = Load3DSound("sfx/vehicles/car1.ogg")
 End Function
@@ -69,12 +75,34 @@ Function UpdateVehicles()
     For car.T_Car = Each T_Car
         If car\energy <= 0 Then
             ; TODO: add explosion effect
-            ; TODO: use separate texture or only darken color?
+            ; TODO: use separate texture
             EntityColor car\entity, 50, 50, 50
+            StopChannel car\engineChannel
         Else
+            If car\speed <> 0 Then ; slow down because of friction
+                If car\speed > 0 Then
+                    car\speed = car\speed - car\friction
+                    If car\speed < 0 Then car\speed = 0 ; do not move backwards
+                Else
+                    car\speed = car\speed + car\friction
+                    If car\speed > 0 Then car\speed = 0 ; do not move forwards
+                EndIf
+            EndIf
+            If car\speed > car\maxSpeed Then car\speed = car\maxSpeed ; speed limit
+
+            ; DebugLog "Acceleration: " + car\acceleration
+            ; DebugLog "Friction: " + car\friction
+            ; DebugLog "Speed: " + car\speed
+
+            ; move car
+            MoveEntity car\entity, 0, 0, car\speed
+
+            ; calculate engine pitch depending on speed
+            ChannelPitch car\engineChannel, 44100 + car\speed * 100000
+
             ; emit engine sound
             If Not ChannelPlaying(car\engineChannel) Then
-                DebugLog "Should play engine sound"
+                ; emit sound
                 car\engineChannel = EmitSound(car\engineSound, car\entity)
             EndIf
         EndIf
