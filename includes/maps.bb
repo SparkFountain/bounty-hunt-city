@@ -13,8 +13,8 @@ Function LoadMap(name$)
         RuntimeError "Heightmap does not exist for map '" + name + "'"
     ElseIf heightmapExists = 1 Then
         map = LoadTerrain("maps/" + name + "/heightmap.png")
-        ScaleEntity map, 1, 10, 1
-        PositionEntity map, 20, 0, 20
+        ScaleEntity map, 1, 3, 1
+        PositionEntity map, -128, 0, -128
     EndIf
 
     ; TODO: change color map path

@@ -235,6 +235,9 @@ Function PlayerControls()
     ; FART
     If KeyHit(KEY_TAB) And player\vehicle = 0 Then
         If Not ChannelPlaying(channelFart) Then channelFart = PlaySound(soundFart(Rand(0,3)))
+
+        ; create green dust cloud
+        ; TODO: use particle engine
     EndIf
 
     ; HORN

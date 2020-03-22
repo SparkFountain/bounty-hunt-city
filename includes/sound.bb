@@ -22,7 +22,7 @@ soundWalk(3) = LoadSound("sfx/step4.mp3")
 Global walkChannel
 
 Dim soundExplosion(0)
-soundExplosion(0) = LoadSound("sfx/vehicles/explode.mp3")
+soundExplosion(0) = Load3DSound("sfx/vehicles/explode.mp3")
 
 Function PlayRadio()
     If Not ChannelPlaying(radioChannel) Then

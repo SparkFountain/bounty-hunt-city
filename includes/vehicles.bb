@@ -62,7 +62,7 @@ Function CreateVehicleEntity(width#, height#, texture)
     ; apply vehicle texture
 	EntityTexture vehicle, texture
 
-	EntityBox vehicle, -1*width, -1, -1*height, width*2, 2, height*2
+	EntityBox vehicle, -1*width, -5, -1*height, width*2, 10, height*2
 	EntityType vehicle, COLLISION_VEHICLE
 
 	ScaleEntity vehicle, width, 2, height
@@ -79,7 +79,7 @@ Function UpdateVehicles()
             ; TODO: use separate texture
             EntityColor car\entity, 50, 50, 50
             StopChannel car\engineChannel
-            PlaySound(soundExplosion(Rand(0,0)))
+            EmitSound(soundExplosion(Rand(0,0)), player\listener)
             car\energy = -1000
         Else
             If car\speed <> 0 Then ; slow down because of friction
