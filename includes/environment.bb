@@ -32,7 +32,7 @@ Function DayNightCicle()
         gameTime = gameTime + 1
 
         If gameTime > 60*5.5 And gameTime <= 60*7 Then
-            Local brightness# = brightness + 1
+            Local brightness# = 100
             AmbientLight brightness, brightness, brightness
         EndIf
     EndIf

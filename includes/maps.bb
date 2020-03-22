@@ -17,8 +17,7 @@ Function LoadMap(name$)
         PositionEntity map, -128, 0, -128
     EndIf
 
-    ; TODO: change color map path
-    mapTexture = LoadTexture("maps/" + name + "/heightmap.png")
+    mapTexture = LoadTexture("maps/" + name + "/colormap.png")
     ScaleTexture mapTexture, 256, 256
     EntityTexture map, mapTexture
 
