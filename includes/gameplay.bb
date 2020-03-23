@@ -52,7 +52,16 @@ Function InitPlayer()
     player\cash = 135289 ; TODO: set to 0 later
 
     ; Weapons
+    player\weapon[0] = "Fist"
     player\weapon[1] = "Pistol"
+    player\weapon[2] = "Machine Pistol"
+    player\weapon[3] = "Machine Gun"
+    player\weapon[4] = "Rifle"
+    player\weapon[5] = "Grenade"
+    player\weapon[6] = "Molotov Cocktail"
+    player\weapon[7] = "Flame Thrower"
+    player\weapon[8] = "Electro Weapon"
+    player\weapon[9] = "Rocket Launcher"
 
     ; 3D Sound Listener
     player\listener = CreatePivot()
@@ -181,6 +190,8 @@ Function PlayerControls()
 
     ; HANDLE WEAPON
     If KeyDown(KEY_CTRL_LEFT) And player\vehicle = 0 Then
+        Local bullet.T_Bullet ; define a bullet iterable instance
+
         Select player\activeWeapon
             Case 0 ; Melee
             
@@ -191,7 +202,7 @@ Function PlayerControls()
                         If ms > lastWeaponTrigger(1) + pistol\shotInterval Then
                             lastWeaponTrigger(1) = ms ; update trigger time
                             PlaySound pistol\shotSound
-                            Local bullet.T_Bullet = New T_Bullet
+                            bullet.T_Bullet = New T_Bullet
                             bullet\entity = CopyEntity(pistol\bulletEntity)
                             bullet\speed = pistol\bulletSpeed
                             bullet\lifeTime = ms + pistol\bulletLifeTime
@@ -201,14 +212,68 @@ Function PlayerControls()
                             MoveEntity bullet\entity, 0, 0, 1
                             ShowEntity bullet\entity
                         EndIf
+                        Exit
                     EndIf
                 Next
             Case 2 ; Machine Pistol
-            
+                Local machinePistol.T_MachinePistol
+                For machinePistol.T_MachinePistol = Each T_MachinePistol
+                    If player\weapon[2] = machinePistol\name Then
+                        If ms > lastWeaponTrigger(1) + machinePistol\shotInterval Then
+                            lastWeaponTrigger(1) = ms ; update trigger time
+                            PlaySound machinePistol\shotSound
+                            bullet.T_Bullet = New T_Bullet
+                            bullet\entity = CopyEntity(machinePistol\bulletEntity)
+                            bullet\speed = machinePistol\bulletSpeed
+                            bullet\lifeTime = ms + machinePistol\bulletLifeTime
+                            bullet\damage = machinePistol\damage
+                            PositionEntity bullet\entity, player\x, player\y, player\z
+                            RotateEntity bullet\entity, player\pitch, player\yaw, player\roll
+                            MoveEntity bullet\entity, 0, 0, 1
+                            ShowEntity bullet\entity
+                        EndIf
+                        Exit
+                    EndIf
+                Next
             Case 3 ; Machine Gun
-           
+                Local machineGun.T_MachineGun
+                For machineGun.T_MachineGun = Each T_MachineGun
+                    If player\weapon[3] = machineGun\name Then
+                        If ms > lastWeaponTrigger(1) + machineGun\shotInterval Then
+                            lastWeaponTrigger(1) = ms ; update trigger time
+                            PlaySound machineGun\shotSound
+                            bullet.T_Bullet = New T_Bullet
+                            bullet\entity = CopyEntity(machineGun\bulletEntity)
+                            bullet\speed = machineGun\bulletSpeed
+                            bullet\lifeTime = ms + machineGun\bulletLifeTime
+                            bullet\damage = machineGun\damage
+                            PositionEntity bullet\entity, player\x, player\y, player\z
+                            RotateEntity bullet\entity, player\pitch, player\yaw, player\roll
+                            MoveEntity bullet\entity, 0, 0, 1
+                            ShowEntity bullet\entity
+                        EndIf
+                        Exit
+                    EndIf
+                Next
             Case 4 ; Rifle
-           
+                Local rifle.T_Rifle
+                For rifle.T_Rifle = Each T_Rifle
+                    If player\weapon[4] = rifle\name Then
+                        If ms > lastWeaponTrigger(1) + rifle\shotInterval Then
+                            lastWeaponTrigger(1) = ms ; update trigger time
+                            PlaySound rifle\shotSound
+                            bullet.T_Bullet = New T_Bullet
+                            bullet\entity = CopyEntity(rifle\bulletEntity)
+                            bullet\speed = rifle\bulletSpeed
+                            bullet\lifeTime = ms + rifle\bulletLifeTime
+                            bullet\damage = rifle\damage
+                            PositionEntity bullet\entity, player\x, player\y, player\z
+                            RotateEntity bullet\entity, player\pitch, player\yaw, player\roll
+                            MoveEntity bullet\entity, 0, 0, 1
+                            ShowEntity bullet\entity
+                        EndIf
+                    EndIf
+                Next
             Case 5 ; Grenade
            
             Case 6 ; Molotov Cocktail

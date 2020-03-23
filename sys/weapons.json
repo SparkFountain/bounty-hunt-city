@@ -2,7 +2,6 @@
   "pistol": {
     "type": "shoot",
     "shotInterval": 700,
-    "ammoPerMagazine": 10,
     "damage": 5,
     "speed": 0.55,
     "lifetime": 100
@@ -10,7 +9,6 @@
   "machine pistol": {
     "type": "shoot",
     "shotInterval": 200,
-    "ammoPerMagazine": 10,
     "damage": 8,
     "speed": 1.0,
     "lifetime": 15
@@ -18,7 +16,6 @@
   "rifle": {
     "type": "shoot",
     "shotInterval": 1600,
-    "ammoPerMagazine": 10,
     "damage": 20,
     "speed": 1.2,
     "lifetime": 8
