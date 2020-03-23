@@ -16,6 +16,7 @@ SeedRnd MilliSecs()
 Graphics3D screen\width, screen\height, screen\depth, screen\mode
 SetBuffer BackBuffer()
 Global frameTimer = CreateTimer(screen\frameRate)
+AntiAlias True
 
 Include "includes/sound.bb"
 Include "includes/gui.bb"

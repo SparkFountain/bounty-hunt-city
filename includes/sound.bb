@@ -1,6 +1,7 @@
 Dim soundAmbient(1)
 soundAmbient(0) = LoadSound("sfx/ambient1.mp3") : LoopSound soundAmbient(0)
 soundAmbient(1) = LoadSound("sfx/ambient2.mp3") : LoopSound soundAmbient(1)
+Global ambientChannel
 
 Dim soundFart(3)
 soundFart(0) = LoadSound("sfx/fart0.mp3")
