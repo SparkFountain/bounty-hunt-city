@@ -29,6 +29,7 @@ Function InitTestMap()
     Local car.T_Car = New T_Car
     Local carDef.T_Vehicle_Definition = First T_Vehicle_Definition
     car\entity = CopyEntity(carDef\entity) : ShowEntity car\entity
+    car\minSpeed = carDef\minSpeed
     car\maxSpeed = carDef\maxSpeed
     car\acceleration = carDef\acceleration
     car\friction = carDef\friction

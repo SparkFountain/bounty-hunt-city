@@ -132,10 +132,10 @@ Function PlayerControls()
             car\speed = car\speed - car\acceleration
         EndIf
         If (KeyDown(KEY_ARROW_LEFT) Or KeyDown(KEY_A)) AND car\speed <> 0 Then
-            TurnEntity car\entity, 0, 1, 0
+            TurnEntity car\entity, 0, car\speed*3, 0
         EndIf
         If (KeyDown(KEY_ARROW_RIGHT) Or KeyDown(KEY_D)) AND car\speed <> 0 Then
-            TurnEntity car\entity, 0, -1, 0
+            TurnEntity car\entity, 0, -car\speed*3, 0
         EndIf
 
         ; center camera to player

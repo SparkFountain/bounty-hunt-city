@@ -1,7 +1,7 @@
 Type T_Vehicle_Definition
 	Field name$
 	Field entity
-	Field maxSpeed#
+	Field minSpeed#, maxSpeed#
     Field acceleration#
     Field friction#
 	Field energy#
@@ -12,7 +12,7 @@ End Type
 Type T_Car
     Field entity
     Field speed#
-    Field maxSpeed#
+    Field minSpeed#, maxSpeed#
     Field acceleration#
     Field friction#
     Field energy#
@@ -36,6 +36,7 @@ Function LoadTestVehicles()
     Local car.T_Vehicle_Definition = new T_Vehicle_Definition
     car\name = "Brummi"
     car\entity = CreateVehicleEntity(1.3, 2.6, LoadTexture("gfx/vehicles/car1.png", TEXTURE_MASKED))
+    car\minSpeed = -0.25
     car\maxSpeed = 0.5
     car\acceleration = 0.007
     car\friction = 0.003
@@ -91,7 +92,8 @@ Function UpdateVehicles()
                     If car\speed > 0 Then car\speed = 0 ; do not move forwards
                 EndIf
             EndIf
-            If car\speed > car\maxSpeed Then car\speed = car\maxSpeed ; speed limit
+            If car\speed > car\maxSpeed Then car\speed = car\maxSpeed ; positive speed limit
+            If car\speed < car\minSpeed Then car\speed = car\minSpeed ; negative (reverse) speed limit
 
             ; DebugLog "Acceleration: " + car\acceleration
             ; DebugLog "Friction: " + car\friction
@@ -110,7 +112,11 @@ Function UpdateVehicles()
             MoveEntity car\entity, 0, 0, car\speed
 
             ; calculate engine pitch depending on speed
-            ChannelPitch car\engineChannel, 44100 + car\speed * 100000
+            If car\speed > 0 Then
+                ChannelPitch car\engineChannel, 44100 + car\speed * 100000
+            Else
+                ChannelPitch car\engineChannel, 44100 - car\speed * 100000
+            EndIf
 
             ; emit engine sound
             If Not ChannelPlaying(car\engineChannel) Then
