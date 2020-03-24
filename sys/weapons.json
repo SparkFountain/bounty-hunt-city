@@ -1,23 +1,26 @@
-{
-  "pistol": {
-    "type": "shoot",
+[
+  {
+    "name": "Pistol",
+    "type": "pistol",
     "shotInterval": 700,
     "damage": 5,
     "speed": 0.55,
     "lifetime": 100
   },
-  "machine pistol": {
-    "type": "shoot",
+  {
+    "name": "Machine Pistol",
+    "type": "machine pistol",
     "shotInterval": 200,
     "damage": 8,
     "speed": 1.0,
     "lifetime": 15
   },
-  "rifle": {
+  {
+    "name": "Rifle",
     "type": "shoot",
     "shotInterval": 1600,
     "damage": 20,
     "speed": 1.2,
     "lifetime": 8
   }
-}
+]

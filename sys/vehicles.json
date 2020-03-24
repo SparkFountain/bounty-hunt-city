@@ -1,6 +1,7 @@
-{
-  "car1": {
-    "category": "car1",
+[
+  {
+    "name": "Car 1",
+    "category": "car",
     "scale_x": 1.3,
     "scale_z": 2.6,
     "gear_1_speed": 15,
@@ -65,8 +66,9 @@
       }
     ]
   },
-  "car2": {
-    "category": "car2",
+  {
+    "name": "Car 1",
+    "category": "car",
     "scale_x": 1.3,
     "scale_z": 2.6,
     "gear_1_speed": 25,
@@ -131,8 +133,9 @@
       }
     ]
   },
-  "car3": {
-    "category": "car3",
+  {
+    "name": "Car 3",
+    "category": "car",
     "scale_x": 1.3,
     "scale_z": 2.6,
     "gear_1_speed": 15,
@@ -197,7 +200,8 @@
       }
     ]
   },
-  "car4": {
+  {
+    "name": "Car 4",
     "category": "car4",
     "scale_x": 1.3,
     "scale_z": 2.6,
@@ -263,8 +267,9 @@
       }
     ]
   },
-  "car5": {
-    "category": "car5",
+  {
+    "name": "Car 5",
+    "category": "car",
     "scale_x": 1.3,
     "scale_z": 2.6,
     "gear_1_speed": 15,
@@ -329,8 +334,9 @@
       }
     ]
   },
-  "car6": {
-    "category": "car6",
+  {
+    "name": "Car 6",
+    "category": "car",
     "scale_x": 1.3,
     "scale_z": 2.6,
     "gear_1_speed": 15,
@@ -395,8 +401,9 @@
       }
     ]
   },
-  "car7": {
-    "category": "car7",
+  {
+    "name": "Car 7",
+    "category": "car",
     "scale_x": 1.3,
     "scale_z": 2.6,
     "gear_1_speed": 15,
@@ -461,8 +468,9 @@
       }
     ]
   },
-  "lkw1": {
-    "category": "lkw1",
+  {
+    "name": "LKW 1",
+    "category": "lkw",
     "scale_x": 1.6,
     "scale_z": 3,
     "gear_1_speed": 7,
@@ -527,8 +535,9 @@
       }
     ]
   },
-  "police1": {
-    "category": "police car",
+  {
+    "name": "Police Car",
+    "category": "car",
     "scale_x": 1,
     "scale_z": 2,
     "gear_1_speed": 20,
@@ -611,4 +620,4 @@
       }
     ]
   }
-}
+]
