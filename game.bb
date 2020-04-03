@@ -24,8 +24,12 @@ Include "includes/hud.bb"
 Include "includes/maps.bb"
 Include "includes/weapons.bb"
 Include "includes/vehicles.bb"
+Include "includes/flora.bb"
 Include "includes/gameplay.bb"
 Include "includes/environment.bb"
+
+; LoadVehicles()
+; End
 
 Global ms ; contains the current milliseconds
 
@@ -42,6 +46,8 @@ LoadTestVehicles()
 ; LOAD TEST MAP
 LoadMap("test-city")
 InitTestMap()
+
+LoadDefaultFlora()
 
 InitPlayer()
 

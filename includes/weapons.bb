@@ -1,3 +1,6 @@
+Global weaponChannel
+Const WEAPON_CHANNEL_VOLUME# = 0.3
+
 Global soundPistol = LoadSound("sfx/weapons/pistol.ogg")
 Global soundMachinePistol = LoadSound("sfx/weapons/machine-pistol.ogg")
 Global soundMachineGun = LoadSound("sfx/weapons/machine-gun.ogg")

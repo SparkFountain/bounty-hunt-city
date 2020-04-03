@@ -1,3 +1,14 @@
+Const STATE_ARRAY_OPEN$ = "array-open"
+Const STATE_ARRAY_CLOSE$ = "array-close"
+Const STATE_OBJECT_OPEN$ = "object-open"
+Const STATE_OBJECT_CLOSE$ = "object-close"
+Const STATE_PROPERTY$ = "property"
+Const STATE_VALUE$ = "value"
+
+Const RUNTIME_ERROR_PREFIX$ = "[ERROR] vehicles.json: "
+
+Const VEHICLE_PITCH_FACTOR = 200000
+
 Type T_Vehicle_Definition
 	Field name$
 	Field entity
@@ -29,7 +40,59 @@ Type T_Boat
 End Type
 
 Function LoadVehicles()
-    ; TODO: implement
+    Local file = ReadFile("sys/vehicles.json")
+    Local state$ = STATE_ARRAY_OPEN
+    Local currentProperty$ = ""
+    Local currentValue$ = ""
+
+    While Not Eof(file)
+        Local currentByte = ReadByte(file)
+        Local nextCharByte, colonByte
+
+        Select state
+            Case STATE_ARRAY_OPEN
+                If Chr(currentByte) <> "[" Then RuntimeError RUNTIME_ERROR_PREFIX + "Must be an array"
+                state = STATE_OBJECT_OPEN
+            Case STATE_OBJECT_OPEN
+                If currentByte <> 32 And currentByte <> 9 And currentByte <> 13 And currentByte <> 10 Then  ; ignore space, tab, carriage return and line feed
+                    If Chr(currentByte) <> "{" Then RuntimeError RUNTIME_ERROR_PREFIX + "Expected object"
+                    state = STATE_PROPERTY
+                EndIf
+            Case STATE_PROPERTY
+                If currentByte <> 34 Then RuntimeError "Expected opening double quote"
+                Repeat
+                    nextCharByte = ReadByte(file)
+                    If nextCharByte <> 34 Then
+                        currentProperty = currentProperty + Chr(nextCharByte)
+                    Else
+                        colonByte = ReadByte(file)
+                        If Chr(colonByte) <> ":" Then RuntimeError RUNTIME_ERROR_PREFIX + "Expected colon after property name"
+                        state = STATE_VALUE
+                        Exit
+                    EndIf
+                Forever
+            Case STATE_VALUE
+                If currentByte <> 34 Then RuntimeError "Expected opening double quote"
+                Repeat
+                    nextCharByte = ReadByte(file)
+                    If nextCharByte <> 34 Then
+                        currentProperty = currentProperty + Chr(nextCharByte)
+                    Else
+                        colonByte = ReadByte(file)
+                        ; TODO: match comma in case another property is following
+                        state = STATE_VALUE
+                        Exit
+                    EndIf
+                Forever
+            Case STATE_OBJECT_CLOSE
+                
+            Case STATE_ARRAY_CLOSE
+                If Chr(currentByte) <> "[" Then RuntimeError RUNTIME_ERROR_PREFIX + "Expected closing array ]"
+                Exit
+        End Select
+    Wend
+
+	CloseFile file
 End Function
 
 Function LoadTestVehicles()
@@ -113,9 +176,9 @@ Function UpdateVehicles()
 
             ; calculate engine pitch depending on speed
             If car\speed > 0 Then
-                ChannelPitch car\engineChannel, 44100 + car\speed * 100000
+                ChannelPitch car\engineChannel, 44100 + car\speed * VEHICLE_PITCH_FACTOR
             Else
-                ChannelPitch car\engineChannel, 44100 - car\speed * 100000
+                ChannelPitch car\engineChannel, 44100 - car\speed * VEHICLE_PITCH_FACTOR
             EndIf
 
             ; emit engine sound

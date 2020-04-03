@@ -1,4 +1,4 @@
-Global gameTime = 60*10 ; time in minutes - begin at 10 am
+Global gameTime = 60*19 ; time in minutes - begin at 10 am
 Global nextTick = 0
 
 Const MIN_BRIGHTNESS = 30

@@ -201,7 +201,8 @@ Function PlayerControls()
                     If player\weapon[1] = pistol\name Then
                         If ms > lastWeaponTrigger(1) + pistol\shotInterval Then
                             lastWeaponTrigger(1) = ms ; update trigger time
-                            PlaySound pistol\shotSound
+                            weaponChannel = PlaySound(pistol\shotSound)
+                            ChannelVolume weaponChannel, WEAPON_CHANNEL_VOLUME
                             bullet.T_Bullet = New T_Bullet
                             bullet\entity = CopyEntity(pistol\bulletEntity)
                             bullet\speed = pistol\bulletSpeed
@@ -221,7 +222,8 @@ Function PlayerControls()
                     If player\weapon[2] = machinePistol\name Then
                         If ms > lastWeaponTrigger(1) + machinePistol\shotInterval Then
                             lastWeaponTrigger(1) = ms ; update trigger time
-                            PlaySound machinePistol\shotSound
+                            weaponChannel = PlaySound(machinePistol\shotSound)
+                            ChannelVolume weaponChannel, WEAPON_CHANNEL_VOLUME
                             bullet.T_Bullet = New T_Bullet
                             bullet\entity = CopyEntity(machinePistol\bulletEntity)
                             bullet\speed = machinePistol\bulletSpeed
@@ -241,7 +243,8 @@ Function PlayerControls()
                     If player\weapon[3] = machineGun\name Then
                         If ms > lastWeaponTrigger(1) + machineGun\shotInterval Then
                             lastWeaponTrigger(1) = ms ; update trigger time
-                            PlaySound machineGun\shotSound
+                            weaponChannel = PlaySound(machineGun\shotSound)
+                            ChannelVolume weaponChannel, WEAPON_CHANNEL_VOLUME
                             bullet.T_Bullet = New T_Bullet
                             bullet\entity = CopyEntity(machineGun\bulletEntity)
                             bullet\speed = machineGun\bulletSpeed
@@ -261,7 +264,8 @@ Function PlayerControls()
                     If player\weapon[4] = rifle\name Then
                         If ms > lastWeaponTrigger(1) + rifle\shotInterval Then
                             lastWeaponTrigger(1) = ms ; update trigger time
-                            PlaySound rifle\shotSound
+                            weaponChannel = PlaySound(rifle\shotSound)
+                            ChannelVolume weaponChannel, WEAPON_CHANNEL_VOLUME
                             bullet.T_Bullet = New T_Bullet
                             bullet\entity = CopyEntity(rifle\bulletEntity)
                             bullet\speed = rifle\bulletSpeed
